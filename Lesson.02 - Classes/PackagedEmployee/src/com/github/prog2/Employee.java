@@ -1,0 +1,68 @@
+package com.github.prog2;
+
+import java.util.Date;
+import java.util.Objects;
+import java.time.LocalDate;
+
+public class Employee {
+    private int id;
+    private String name;
+    private double salary;
+    private LocalDate hireDay;
+    private Date endDay;
+
+    private static int baseId = 1;
+
+    public Employee(String n, double s, int year, int month, int day) {
+        id = Employee.getNextId();
+
+        name = Objects.requireNonNullElse(n, "unknown");
+        salary = s;
+        hireDay = LocalDate.of(year, month, day);
+        endDay = new Date((year - 1900) + 3, month - 1, day);
+    }
+
+    public Employee(String n, double s, int year) {
+        id = Employee.getNextId();
+
+        name = Objects.requireNonNull(n, "The name cannot be null");
+        salary = s;
+        hireDay = LocalDate.of(year, 1, 1);
+        endDay = null;
+    }
+
+    // accessors
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public LocalDate getHireDay() {
+        return hireDay;
+    }
+
+    public Date getEndDay() {
+        return endDay;
+    }
+
+    public void raiseSalary(double byPercent) {
+        double raise = salary * byPercent / 100;
+        salary += raise;
+    }
+
+    public void raiseSalary() {
+        double raise = this.salary * 10 / 100;
+        this.salary += raise;
+    }
+
+    private static int getNextId() {
+        return Employee.baseId++;
+    }
+}
