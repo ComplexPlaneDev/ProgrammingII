@@ -1,0 +1,29 @@
+# Bank Transaction Processor – Input File
+# Format: COMMAND ACCOUNT AMOUNT  or  TRANSFER FROM TO AMOUNT
+# Lines starting with # are comments.
+
+DEPOSIT ACC001 500.00
+WITHDRAW ACC002 200.00
+
+# ACC999 does not exist
+TRANSFER ACC001 ACC999 100.00
+
+# Alice only has 1500
+WITHDRAW ACC001 99999.00
+
+# Charlie's account is frozen
+DEPOSIT ACC003 100.00
+
+# Diana's account is suspended
+WITHDRAW ACC004 200.00
+
+# Limit is 5000
+TRANSFER ACC001 ACC002 8000.00
+
+# Transfer from frozen account
+TRANSFER ACC003 ACC001 50.00
+
+# Negative amount
+DEPOSIT ACC001 -50.00
+
+WITHDRAW ACC002 100.00
