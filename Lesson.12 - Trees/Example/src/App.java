@@ -2,10 +2,12 @@ class Node {
     int value;
     Node left;
     Node right;
+    int height;
 
     Node(int v) {
         value = v;
         left = right = null;
+        height = 1;
     }
 }
 
@@ -16,7 +18,21 @@ class BinarySearchTree {
         root = insert(root, v);
     }
 
-    private Node insert(Node n, int v) {
+    /* Calculate height using recursion - we don't use it here to save computation steps by consuming more memory per node
+    private int height(Node n) {
+        if (n == null) {
+            return 0;
+        }
+
+        return 1 + Math.max(height(n.left), height(n.right));
+    }
+    */
+
+    private static int height(Node n) {
+        return (n == null) ? 0 : n.height;
+    }
+
+    private static Node insert(Node n, int v) {
         if (n == null) {
             Node newNode = new Node(v);
             return newNode;
@@ -25,6 +41,8 @@ class BinarySearchTree {
         } else if (v > n.value) {
             n.right = insert(n.right, v);
         }
+
+        n.height = 1 + Math.max(height(n.left), height(n.right));
 
         return n;
     }
@@ -49,7 +67,7 @@ class BinarySearchTree {
         preOrder(root);
     }
 
-    private void preOrder(Node n) {
+    private static void preOrder(Node n) {
         if (n != null) {
             System.out.println(n.value);
 
@@ -62,7 +80,7 @@ class BinarySearchTree {
         inOrder(root);
     }
 
-    private void inOrder(Node n) {
+    private static void inOrder(Node n) {
         if (n != null) {
             inOrder(n.left);
 
@@ -76,7 +94,7 @@ class BinarySearchTree {
         postOrder(root);
     }
 
-    private void postOrder(Node n) {
+    private static void postOrder(Node n) {
         if (n != null) {
             postOrder(n.left);
             postOrder(n.right);
@@ -85,7 +103,7 @@ class BinarySearchTree {
         }
     }
 
-    private Node getSuccessor(Node n) {
+    private static Node getSuccessor(Node n) {
         if (n != null && n.right != null) {
             n = n.right;
 
@@ -101,7 +119,7 @@ class BinarySearchTree {
         delNode(root, v);
     }
 
-    private Node delNode(Node n, int v) {
+    private static Node delNode(Node n, int v) {
         if (n == null) {
             return null;
         }
@@ -133,6 +151,66 @@ class BinarySearchTree {
 
         return n;
     }
+
+    private static Node rotateRight(Node P) {
+        Node D = P.left;
+        Node L = D.right;
+
+        D.right = P;
+        P.left = L;
+
+        P.height = 1 + Math.max(height(P.left), height(P.right));
+        D.height = 1 + Math.max(height(D.left), height(D.right));
+
+        return D;
+    }
+
+    private static Node rotateLeft(Node B) {
+        Node D = B.right;
+        Node C = D.left;
+
+        D.left = B;
+        B.right = C;
+
+        B.height = 1 + Math.max(height(B.left), height(B.right));
+        D.height = 1 + Math.max(height(D.left), height(D.right));
+
+        return D;
+    }
+
+    private static Node balancedInsert(Node n, int v) {
+        Node node = insert(n, v);
+
+        int balanceFactor = height(node.right) - height(node.left);
+
+        // Left-Left Case
+        if (balanceFactor < -1 && v < node.left.value) {
+            return rotateRight(node);
+        }
+
+        // Right-Right Case
+        if (balanceFactor > 1 && v > node.right.value) {
+            return rotateLeft(node);
+        }
+
+        // Left-Right Case
+        if (balanceFactor < -1 && v > node.left.value) {
+            node.left = rotateLeft(node.left);
+            return rotateRight(node);
+        }
+
+        // Right-Left Case
+        if (balanceFactor > 1 && v < node.right.value) {
+            node.right = rotateRight(node.right);
+            return rotateLeft(node);
+        }
+
+        return node;
+    }
+
+    public void balancedInsert(int v) {
+        root = balancedInsert(root, v);
+    }
 }
 
 public class App {
@@ -144,7 +222,9 @@ public class App {
         bt.insert(1);
         bt.insert(10);
         bt.insert(7);
+        */
 
+        /*
         System.out.println(bt.exists(5));
         System.out.println(bt.exists(8));
 
@@ -155,6 +235,7 @@ public class App {
         bt.postOrder();
         */
 
+        /*
         bt.insert(5);
         bt.insert(3);
         bt.insert(7);
@@ -162,7 +243,42 @@ public class App {
         bt.insert(4);
         bt.insert(6);
         bt.insert(8);
+        */
 
-        bt.delNode(7);
+        // bt.delNode(7);
+
+        /*
+        // Right-Right example
+        bt.balancedInsert(20);
+        bt.balancedInsert(30);
+        bt.balancedInsert(40);
+        */
+
+        /*
+        // Left-Left example
+        bt.balancedInsert(20);
+        bt.balancedInsert(10);
+        bt.balancedInsert(1);
+        */
+
+        /*
+        // Left-Right example
+        bt.balancedInsert(30);
+        bt.balancedInsert(20);
+        bt.balancedInsert(40);
+        bt.balancedInsert(10);
+        bt.balancedInsert(25);
+        bt.balancedInsert(26);
+        */
+
+        /*
+        // Right-Left example
+        bt.balancedInsert(30);
+        bt.balancedInsert(20);
+        bt.balancedInsert(40);
+        bt.balancedInsert(35);
+        bt.balancedInsert(45);
+        bt.balancedInsert(31);
+        */
     }
 }
