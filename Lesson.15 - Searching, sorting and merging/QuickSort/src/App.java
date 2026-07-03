@@ -16,23 +16,23 @@ public class App {
 
     private static int partition(int arr[], int begin, int end) {
         int pivot = arr[begin];
-        int L = begin - 1;
+        int L = begin;
         int R = end + 1;
 
         while (true) {
             // Find leftmost element >= pivot
             do {
                 L++;
-            } while (arr[L] < pivot);
+            } while (arr[L] < pivot && L < end);
 
             // Find rightmost element <= pivot
             do {
                 R--;
-            } while (arr[R] > pivot);
+            } while (arr[R] > pivot && R > begin);
 
             // If pointers cross, partition is complete
             if (L >= R) {
-                return R;
+                break;
             }
 
             // Swap elements
@@ -40,5 +40,12 @@ public class App {
             arr[L] = arr[R];
             arr[R] = temp;
         }
+
+        // Place pivot in the correct place
+        int temp = arr[begin];
+        arr[begin] = arr[R];
+        arr[R] = temp;
+
+        return R;
     }
 }
